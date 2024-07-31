@@ -3,14 +3,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
-    <changeSet id="100001" author="Suhrob Madaminov">
+    <changeSet id="100007" author="Suhrob Madaminov">
         <sql dbms="postgresql" >
-            CREATE TABLE admin (
-                                   id BIGSERIAL PRIMARY KEY,
-                                   mac_address VARCHAR(255) NOT NULL,
-                                   password VARCHAR(255) NOT NULL,
-                                   device_id VARCHAR(255) NOT NULL
-            );
+           alter table qr_code alter column expiry_time set data type TIMESTAMP;
 
         </sql>
     </changeSet>
