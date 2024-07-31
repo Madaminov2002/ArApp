@@ -24,7 +24,7 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     @Column(nullable = false)
-    private String macAdress;
+    private String macAddress;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)

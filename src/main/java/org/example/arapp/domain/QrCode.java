@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class QrCode {
     @Column(nullable = false)
     private Integer deviceCount;
     @Column(nullable = false)
-    private LocalDate expiryTime;
+    private Date expiryTime;
     @ManyToOne
     private Group group;
 
