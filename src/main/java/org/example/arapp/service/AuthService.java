@@ -32,6 +32,7 @@ public class AuthService {
         if (passwordEncoder.matches(dto.getPassword(), adminByDeviceId.get().getPassword())) {
             throw new PasswordIncorrectException(dto.getPassword());
         }
+
         String token = jwtProvider.generate(adminByDeviceId.get());
 
         return new JwtResponse(token);
