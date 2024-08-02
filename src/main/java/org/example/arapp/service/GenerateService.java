@@ -40,7 +40,7 @@ public class GenerateService {
             boolean active = true;
             String qr = randomUniqueCode();
 
-            Optional<QrCode> first = qrCodeRepository.groupByGrId(group.get().getId()).stream()
+            Optional<QrCode> first = qrCodeRepository.findAll().stream()
                     .filter(qrCode -> qrCode.getCode().equalsIgnoreCase(qr)).findFirst();
 
             if (first.isPresent()) {
@@ -67,7 +67,7 @@ public class GenerateService {
     private String randomUniqueCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
-        return IntStream.range(0, 10)
+        return IntStream.range(0, 12)
                 .mapToObj(i -> String.valueOf(characters.charAt(random.nextInt(characters.length()))))
                 .collect(Collectors.joining());
     }
