@@ -1,12 +1,7 @@
 package org.example.arapp.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -32,7 +27,7 @@ public class QrCode {
     private Integer deviceCount;
     @Column(nullable = false)
     private Date expiryTime;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Group group;
 
 }

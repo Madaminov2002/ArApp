@@ -10,11 +10,24 @@ import org.example.arapp.exception.MacAddressNotFoundException;
 import org.example.arapp.exception.PasswordIncorrectException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> validationError(MethodArgumentNotValidException exception) {
+        return ResponseEntity.ok(
+                ErrorResponseDto.builder()
+                        .message(exception.getMessage())
+                        .status(HttpStatus.NOT_ACCEPTABLE)
+                        .code(HttpServletResponse.SC_NOT_FOUND)
+                        .build()
+        );
+    }
+
     @ExceptionHandler(MacAddressNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> macAddressNotFound(MacAddressNotFoundException exception) {
         return ResponseEntity.ok(

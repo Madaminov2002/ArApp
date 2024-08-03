@@ -28,7 +28,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private static final String[] AUTH_WHITELIST = {
-            "/auth/admin-login"
+            "/auth/admin-login",
+            "/user/register",
+            "/user/check"
     };
 
     @Bean
