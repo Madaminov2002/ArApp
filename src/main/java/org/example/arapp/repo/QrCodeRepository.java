@@ -1,5 +1,6 @@
 package org.example.arapp.repo;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +29,5 @@ public interface QrCodeRepository extends JpaRepository<QrCode, Long> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = "update qr_code set expiry_time=:eTime where group_id=:grId")
-    void updateQrCodesExpiryTime(@Param("grId") Long grId, @Param("eTime")Date expiryTime);
+    void updateQrCodesExpiryTime(@Param("grId") Long grId, @Param("eTime") Date expiryTime);
 }

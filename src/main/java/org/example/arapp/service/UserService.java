@@ -30,7 +30,7 @@ public class UserService {
 
     public boolean checkingUser(UserCheckingReqDto dto) {
 
-        Optional<User> user = checkFromDatabase(dto.getDeviceId(), dto.getAppName());
+        Optional<User> user = checkFromDatabase(dto.getDeviceId());
 
         if (user.isPresent()) {
 
@@ -45,13 +45,22 @@ public class UserService {
 
     public void register(UserRegisterDto dto) {
 
-
         //////// checking what user is available
-        Optional<User> userOptional = checkFromDatabase(dto.getDeviceId(), dto.getAppName());
-        if (userOptional.isPresent()) {
-            throw new UserAlreadyExist();
-        }
+        Optional<User> userOptional = checkFromDatabase(dto.getDeviceId());
+        boolean isPresentUser = userOptional.isPresent();
+        User user;
 
+        if (isPresentUser) {
+            user = userOptional.get();
+
+            user.getQrCode().forEach(a -> {
+
+                if (a.getGroup().getApp().getName().equals(dto.getAppName())) {
+                    throw new UserAlreadyExist();
+                }
+
+            });
+        }
 
         ///////// getting qr code entity from entity
         String qrCodeString = dto.getQrCode();
@@ -59,25 +68,29 @@ public class UserService {
         if (qrCodeOptional.isEmpty()) {
             throw new QrCodeNotFoundException();
         }
+
         QrCode qrCodeEntity = qrCodeOptional.get();
 
 
-        ////////  Checking with filter
+        ////////  Checking Qr kode with filter
         checkAppNameEqualQrAppName(dto.getAppName(), qrCodeEntity);
-
-        checkDeviceCapacityCount(qrCodeEntity);
 
         checkValidatingQrCode(qrCodeEntity);
 
+        checkDeviceCapacityCount(qrCodeEntity);
 
-        /////////////
+        ///////////// saving user to database
 
-        User forSavingEntity = new User();
-        forSavingEntity.setAppName(dto.getAppName());
-        forSavingEntity.setDeviceId(dto.getDeviceId());
-//        forSavingEntity.setQrCode();
+        if (isPresentUser) {
+            user = userOptional.get();
+            user.getQrCode().add(qrCodeEntity);
+        } else {
+            user = new User();
+            user.setDeviceId(dto.getDeviceId());
+            user.setQrCode(List.of(qrCodeEntity));
+        }
 
-
+        userRepository.save(user);
     }
 
     private void checkDeviceCapacityCount(QrCode qrCode) {
@@ -107,10 +120,13 @@ public class UserService {
 
     }
 
-    private Optional<User> checkFromDatabase(String deviceId, String appName) {
-        Optional<User> byAppNameAndDeviceId = userRepository.findByDeviceIdAndAppName(deviceId, appName);
+    private Optional<User> checkFromDatabase(String deviceId) {
 
-        return byAppNameAndDeviceId;
+        return userRepository.findByDeviceId(deviceId);
+
+//        Optional<User> byAppNameAndDeviceId = Optional.empty(); //= userRepository.findByDeviceIdAndAppName(deviceId, appName);
+
+//        return byAppNameAndDeviceId;
     }
 
 }
