@@ -23,12 +23,8 @@ public class UserController {
 
     @PostMapping("/check")
     public ResponseEntity checking(@RequestBody @Valid UserCheckingReqDto dto) {
-        if (userService.checkingUser(dto)) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-        }
+        userService.checkingUser(dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @PostMapping("/register")

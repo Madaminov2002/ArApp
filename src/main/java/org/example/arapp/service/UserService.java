@@ -28,18 +28,29 @@ public class UserService {
         this.usersQrCodeRepository = usersQrCodeRepository;
     }
 
-    public boolean checkingUser(UserCheckingReqDto dto) {
+    public void checkingUser(UserCheckingReqDto dto) {
 
-        Optional<User> user = checkFromDatabase(dto.getDeviceId());
+        Optional<User> userOptional = checkFromDatabase(dto.getDeviceId());
 
-        if (user.isPresent()) {
+        if (userOptional.isPresent()) {
 
+            User user = userOptional.get();
+            Optional<QrCode> first = user.getQrCode().stream().filter(qr -> {
+                if (qr.getGroup().getApp().getName().equals(dto.getAppName())) {
+                    checkValidatingQrCode(qr);
+                    return true;
+                }
+                return false;
 
+            }).findFirst();
 
-            return true;
+            if (first.isPresent()) {
+                return;
+            }
+
         }
 
-        return false;
+        throw new UserIsNotRegistered();
 
     }
 
