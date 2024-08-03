@@ -4,6 +4,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.arapp.domain.Admin;
 import org.example.arapp.dto.authdto.AdminLoginDto;
+import org.example.arapp.dto.authdto.AuthUpdateDto;
 import org.example.arapp.exception.DeviceIdNotFoundException;
 import org.example.arapp.exception.MacAddressNotFoundException;
 import org.example.arapp.exception.PasswordIncorrectException;
@@ -29,13 +30,19 @@ public class AuthService {
         if (adminByDeviceId.isEmpty()) {
             throw new DeviceIdNotFoundException(dto.getDeviceID());
         }
-        if (passwordEncoder.matches(dto.getPassword(), adminByDeviceId.get().getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), adminByDeviceId.get().getPassword())) {
             throw new PasswordIncorrectException(dto.getPassword());
         }
 
         String token = jwtProvider.generate(adminByDeviceId.get());
 
         return new JwtResponse(token);
+    }
+
+    public void updatePassword(AuthUpdateDto dto) {
+        String encode = passwordEncoder.encode(dto.getNewPassword());
+        adminRepository.updateByMacAddress(dto.getMacAddress(), encode);
+
     }
 
 }
