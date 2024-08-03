@@ -34,7 +34,7 @@ public class UserService {
 
         if (user.isPresent()) {
 
-//            user.get().
+
 
             return true;
         }
@@ -124,9 +124,6 @@ public class UserService {
 
         return userRepository.findByDeviceId(deviceId);
 
-//        Optional<User> byAppNameAndDeviceId = Optional.empty(); //= userRepository.findByDeviceIdAndAppName(deviceId, appName);
-
-//        return byAppNameAndDeviceId;
     }
 
 }
