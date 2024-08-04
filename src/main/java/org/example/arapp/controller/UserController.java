@@ -1,6 +1,8 @@
 package org.example.arapp.controller;
 
 import jakarta.validation.Valid;
+import org.example.arapp.dto.qrdto.InfoAboutQrCodeRespDto;
+import org.example.arapp.dto.qrdto.QrCheckingForInformationReqDto;
 import org.example.arapp.dto.userdto.UserCheckingReqDto;
 import org.example.arapp.dto.userdto.UserRegisterDto;
 import org.example.arapp.service.UserService;
@@ -33,4 +35,12 @@ public class UserController {
         userService.register(dto);
 
     }
+
+    @PostMapping("/qr/info")
+    public ResponseEntity<InfoAboutQrCodeRespDto> checking(@RequestBody @Valid QrCheckingForInformationReqDto dto) {
+        InfoAboutQrCodeRespDto info = userService.info(dto);
+        return ResponseEntity.status(HttpStatus.FOUND).body(info);
+    }
+
+
 }
