@@ -3,6 +3,8 @@ package org.example.arapp.service;
 import org.example.arapp.domain.QrCode;
 import org.example.arapp.domain.User;
 import org.example.arapp.domain.UsersQrCode;
+import org.example.arapp.dto.qrdto.InfoAboutQrCodeRespDto;
+import org.example.arapp.dto.qrdto.QrCheckingForInformationReqDto;
 import org.example.arapp.dto.userdto.UserCheckingReqDto;
 import org.example.arapp.dto.userdto.UserRegisterDto;
 import org.example.arapp.exception.*;
@@ -50,7 +52,7 @@ public class UserService {
 
         }
 
-        throw new UserIsNotRegistered();
+        throw new UserIsNotRegistered(dto.getDeviceId());
 
     }
 
@@ -64,10 +66,11 @@ public class UserService {
         if (isPresentUser) {
             user = userOptional.get();
 
+            User finalUser = user;
             user.getQrCode().forEach(a -> {
 
                 if (a.getGroup().getApp().getName().equals(dto.getAppName())) {
-                    throw new UserAlreadyExist();
+                    throw new UserAlreadyExist(finalUser.getDeviceId(),a.getGroup().getApp().getName());
                 }
 
             });
@@ -77,7 +80,7 @@ public class UserService {
         String qrCodeString = dto.getQrCode();
         Optional<QrCode> qrCodeOptional = qrCodeRepository.findByCode(qrCodeString);
         if (qrCodeOptional.isEmpty()) {
-            throw new QrCodeNotFoundException();
+            throw new QrCodeNotFoundException(qrCodeString);
         }
 
         QrCode qrCodeEntity = qrCodeOptional.get();
@@ -110,23 +113,23 @@ public class UserService {
         int avaCount = usersQrCodes.size();
 
         if (avaCount >= qrCode.getDeviceCount()) {
-            throw new DeviceNumberLimitedException();
+            throw new DeviceNumberLimitedException(qrCode.getCode(), avaCount);
         }
 
     }
 
     private void checkAppNameEqualQrAppName(String appName, QrCode qrCodeEntity) {
         if (!qrCodeEntity.getGroup().getApp().getName().equals(appName)) {
-            throw new QrCodeNoBelongsTheAppException();
+            throw new QrCodeNoBelongsTheAppException(qrCodeEntity.getCode());
         }
     }
 
     private void checkValidatingQrCode(QrCode qrCode) {
 
         if (qrCode.getGroup().getActive()) {
-            if (qrCode.getExpiryTime().before(new Date())) throw new QrCodeExpiredException();
+            if (qrCode.getExpiryTime().before(new Date())) throw new QrCodeExpiredException(qrCode.getCode());
         } else {
-            throw new GroupInactiveException();
+            throw new GroupInactiveException(qrCode.getGroup().getApp().getName(), qrCode.getGroup().getName());
         }
 
     }
@@ -137,4 +140,27 @@ public class UserService {
 
     }
 
+    public InfoAboutQrCodeRespDto info(QrCheckingForInformationReqDto dto) {
+        Optional<QrCode> qrCodeOptional = qrCodeRepository.findByCode(dto.getQrCode());
+        if (qrCodeOptional.isEmpty()) {
+            throw new QrCodeNotFoundException(dto.getQrCode());
+        }
+
+
+        QrCode qrCode = qrCodeOptional.get();
+
+        List<UsersQrCode> usersQrCodes = usersQrCodeRepository.findById_QrCodeId(qrCode.getId());
+        int registeredUser = usersQrCodes.size();
+
+        return InfoAboutQrCodeRespDto
+                .builder()
+                .appName(qrCode.getGroup().getApp().getName())
+                .groupName(qrCode.getGroup().getName())
+                .qrCode(qrCode.getCode())
+                .deviceLimit(qrCode.getDeviceCount())
+                .registeredUsers(registeredUser)
+                .expiration(qrCode.getExpiryTime().toInstant().getEpochSecond())
+                .build();
+
+    }
 }

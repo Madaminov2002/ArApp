@@ -30,7 +30,8 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/auth/admin-login",
             "/user/register",
-            "/user/check"
+            "/user/check",
+            "/user/qr/info"
     };
 
     @Bean
