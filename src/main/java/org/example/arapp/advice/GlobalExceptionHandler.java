@@ -132,6 +132,16 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+ @ExceptionHandler(GroupNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> groupNotFound(GroupNotFoundException exception) {
+        return ResponseEntity.ok(
+                ErrorResponseDto.builder()
+                        .message(exception.getMessage())
+                        .status(HttpStatus.NOT_FOUND)
+                        .code(HttpServletResponse.SC_NOT_FOUND)
+                        .build()
+        );
+    }
 
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity<ErrorResponseDto> incorrectPassword(PasswordIncorrectException exception) {

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.arapp.auditing.Auditor;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Builder
 @Table
 @Entity
-public class QrCode {
+public class QrCode extends Auditor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

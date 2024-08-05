@@ -10,6 +10,7 @@
                                    mac_address VARCHAR(255) NOT NULL,
                                    password VARCHAR(255) NOT NULL,
                                    device_id VARCHAR(255) NOT NULL
+
             );
 
         </sql>
