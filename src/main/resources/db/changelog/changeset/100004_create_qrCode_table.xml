@@ -10,7 +10,11 @@
                                      code VARCHAR(255) NOT NULL,
                                      device_count INT NOT NULL,
                                      expiry_time DATE NOT NULL,
-                                     group_id BIGINT REFERENCES groups(id)
+                                     group_id BIGINT REFERENCES groups(id),
+                                     last_modified_time TIMESTAMP,
+                                     created_time TIMESTAMP,
+                                     created_by VARCHAR,
+                                     last_modified_by VARCHAR
             );
 
         </sql>

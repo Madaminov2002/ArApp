@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.arapp.auditing.Auditor;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Builder
 @Table(name = "groups")
 @Entity
-public class Group {
+public class Group extends Auditor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
