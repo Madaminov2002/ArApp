@@ -2,7 +2,6 @@ package org.example.arapp.domain;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -21,7 +21,7 @@ public class Group extends Auditor {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private App app;
     @Builder.Default
     private Boolean active = Boolean.TRUE;
