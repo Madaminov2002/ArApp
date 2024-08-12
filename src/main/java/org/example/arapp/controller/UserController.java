@@ -5,6 +5,7 @@ import org.example.arapp.dto.qrdto.InfoAboutQrCodeRespDto;
 import org.example.arapp.dto.qrdto.QrCheckingForInformationReqDto;
 import org.example.arapp.dto.userdto.UserCheckingReqDto;
 import org.example.arapp.dto.userdto.UserRegisterDto;
+import org.example.arapp.exception.UserAlreadyExist;
 import org.example.arapp.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class UserController {
     @PostMapping("/check")
     public ResponseEntity checking(@RequestBody @Valid UserCheckingReqDto dto) {
         userService.checkingUser(dto);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        throw new UserAlreadyExist(dto.getDeviceId(), dto.getAppName());
     }
 
     @PostMapping("/register")
