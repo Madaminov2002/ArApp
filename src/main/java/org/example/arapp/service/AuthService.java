@@ -40,6 +40,12 @@ public class AuthService {
     }
 
     public void updatePassword(AuthUpdateDto dto) {
+        Optional<Admin> adminByMacAddress = adminRepository.findAdminByMacAddress(dto.getMacAddress());
+
+        if (adminByMacAddress.isEmpty()) {
+            throw new MacAddressNotFoundException(dto.getMacAddress());
+        }
+
         String encode = passwordEncoder.encode(dto.getNewPassword());
         adminRepository.updateByMacAddress(dto.getMacAddress(), encode);
 

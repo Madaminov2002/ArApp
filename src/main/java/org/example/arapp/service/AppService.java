@@ -13,11 +13,14 @@ import org.springframework.stereotype.Service;
 public class AppService {
     private final AppRepository appRepository;
 
-    public App save(AppDto dto) {
+    public String save(AppDto dto) {
         Optional<App> byName = appRepository.findByName(dto.getName());
         if (byName.isPresent()) {
             throw new AppNameAlreadyExistsException(dto.getName());
         }
-        return appRepository.save(App.builder().name(dto.getName()).build());
+
+        appRepository.save(App.builder().name(dto.getName()).build());
+
+        return "App created";
     }
 }

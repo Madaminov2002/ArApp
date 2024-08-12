@@ -19,7 +19,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final AppRepository appRepository;
 
-    public Group save(GroupDto groupDto) {
+    public String save(GroupDto groupDto) {
         Optional<App> app = appRepository.findById(groupDto.getAppID());
         if (app.isEmpty()) {
             throw new AppNotFoundException(String.valueOf(groupDto.getAppID()));
@@ -29,7 +29,10 @@ public class GroupService {
         if (first.isPresent()) {
             throw new GroupNameAlreadyExistsException(app.get().getName());
         }
-        return groupRepository.save(Group.builder().name(groupDto.getName()).app(app.get()).build());
+
+        groupRepository.save(Group.builder().name(groupDto.getName()).app(app.get()).build());
+
+        return "Group created";
     }
 
     public void updateGroupStatus(GrUpdateDto dto) {

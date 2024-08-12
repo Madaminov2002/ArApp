@@ -25,7 +25,7 @@ public class GroupController {
     private final GroupRepository groupRepository;
 
     @PostMapping("/save")
-    public ResponseEntity<Group> save(@RequestBody GroupDto groupDto) {
+    public ResponseEntity<String> save(@RequestBody GroupDto groupDto) {
         return ResponseEntity.ok(groupService.save(groupDto));
     }
 

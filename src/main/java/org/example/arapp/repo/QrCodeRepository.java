@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.example.arapp.domain.QrCode;
+import org.example.arapp.projection.QrProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,7 @@ public interface QrCodeRepository extends JpaRepository<QrCode, Long> {
     @Transactional
     @Query(nativeQuery = true, value = "update qr_code set expiry_time=:eTime where group_id=:grId")
     void updateQrCodesExpiryTime(@Param("grId") Long grId, @Param("eTime") Date expiryTime);
+
+    @Query(nativeQuery = true,value = "select qr_code.code,id from qr_code where id>=:low and id<=:high")
+    List<QrProjection> finnById(@Param("low")Long low, @Param("high")Long high);
 }

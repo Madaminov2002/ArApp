@@ -18,4 +18,5 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     @Transactional
     @Query(nativeQuery = true,value = "update admin set password=:password where mac_address=:mAddress")
     void updateByMacAddress(@Param("mAddress") String macAddress, @Param("password") String password);
+
 }

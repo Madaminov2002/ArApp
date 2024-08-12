@@ -14,6 +14,7 @@ import org.example.arapp.dto.qrdto.QrDto;
 import org.example.arapp.dto.qrdto.QrUpdateDto;
 import org.example.arapp.exception.AppNotFoundException;
 import org.example.arapp.exception.GroupNotFoundException;
+import org.example.arapp.projection.QrProjection;
 import org.example.arapp.repo.AppRepository;
 import org.example.arapp.repo.GroupRepository;
 import org.example.arapp.repo.QrCodeRepository;
@@ -26,7 +27,7 @@ public class GenerateService {
     private final AppRepository appRepository;
     private final GroupRepository groupRepository;
 
-    public List<QrCode> generateQrCode(QrDto dto) {
+    public List<QrProjection> generateQrCode(QrDto dto) {
         Optional<App> app = appRepository.findByName(dto.getAppName());
 
         if (app.isEmpty()) {
@@ -66,7 +67,12 @@ public class GenerateService {
             }
 
         }
-        return qrCodeRepository.saveAll(qrCodes);
+
+        qrCodeRepository.saveAll(qrCodes);
+
+        Long low = qrCodes.get(0).getId();
+
+        return qrCodeRepository.finnById(low,low+dto.getCount());
 
     }
 

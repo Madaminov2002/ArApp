@@ -23,7 +23,7 @@ public class AppController {
     private final AppRepository appRepository;
 
     @PostMapping("/save")
-    public ResponseEntity<App> save(@RequestBody AppDto dto) {
+    public ResponseEntity<String> save(@RequestBody AppDto dto) {
         return ResponseEntity.ok(appService.save(dto));
     }
 
