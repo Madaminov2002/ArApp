@@ -1,10 +1,14 @@
 package org.example.arapp.controller;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.arapp.domain.Group;
+import org.example.arapp.dto.groupdto.AppAndGroupForGetQrsReqDto;
 import org.example.arapp.dto.groupdto.GrUpdateDto;
 import org.example.arapp.dto.groupdto.GroupDto;
+import org.example.arapp.projection.QrProjection;
 import org.example.arapp.repo.GroupRepository;
 import org.example.arapp.service.GroupService;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +42,15 @@ public class GroupController {
     public ResponseEntity<String> updateGroupStatus(@RequestBody GrUpdateDto dto) {
         groupService.updateGroupStatus(dto);
         return ResponseEntity.ok("Group status updated");
+    }
+
+    @GetMapping("/qr-codes")
+    public ResponseEntity<List<QrProjection>> qrCodes(@RequestBody @Valid AppAndGroupForGetQrsReqDto appAndGroupForGetQrsReqDto) {
+
+        List<QrProjection> qrsOfGroup = groupService.getQrsOfGroup(appAndGroupForGetQrsReqDto);
+
+        return ResponseEntity.ok(qrsOfGroup);
+
     }
 
 }

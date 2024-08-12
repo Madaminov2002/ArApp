@@ -2,15 +2,22 @@ package org.example.arapp.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.arapp.dto.groupdto.AppAndGroupForGetQrsReqDto;
 import org.example.arapp.domain.App;
 import org.example.arapp.domain.Group;
+import org.example.arapp.domain.QrCode;
 import org.example.arapp.dto.groupdto.GrUpdateDto;
 import org.example.arapp.dto.groupdto.GroupDto;
 import org.example.arapp.exception.AppNotFoundException;
 import org.example.arapp.exception.GroupNameAlreadyExistsException;
+import org.example.arapp.exception.GroupNotFoundException;
+import org.example.arapp.projection.QrProjection;
 import org.example.arapp.repo.AppRepository;
 import org.example.arapp.repo.GroupRepository;
+import org.example.arapp.repo.QrCodeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final AppRepository appRepository;
+    private final QrCodeRepository qrCodeRepository;
 
     public String save(GroupDto groupDto) {
         Optional<App> app = appRepository.findById(groupDto.getAppID());
@@ -47,5 +55,21 @@ public class GroupService {
         if (dto.getStatus().equalsIgnoreCase("true")) {
             groupRepository.updateStatusToTrue(dto.getGrName(), app.get().getId());
         }
+    }
+
+    public List<QrProjection> getQrsOfGroup(@Valid AppAndGroupForGetQrsReqDto appAndGroupForGetQrsReqDto) {
+
+        var groupOptional = groupRepository.findByNameAndApp_Name(appAndGroupForGetQrsReqDto.getGroupName(), appAndGroupForGetQrsReqDto.getAppName());
+
+        if (groupOptional.isEmpty()) {
+            throw new GroupNotFoundException(appAndGroupForGetQrsReqDto.getGroupName());
+        }
+
+
+        List<QrProjection> qrProjectionList = qrCodeRepository.findByAppAndGroupName(appAndGroupForGetQrsReqDto.getAppName(), appAndGroupForGetQrsReqDto.getGroupName());
+
+        return qrProjectionList;
+
+
     }
 }
