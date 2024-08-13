@@ -22,6 +22,9 @@ public interface QrCodeRepository extends JpaRepository<QrCode, Long> {
 
     List<QrCode> findQrCodesByGroupId(Long groupId);
 
+    @Query(nativeQuery = true, value = "select qr_code.id, qr_code.code from qr_code inner join public.groups g on g.id = qr_code.group_id inner join public.app a on a.id = g.app_id where a.name=:app and g.name=:group")
+    List<QrProjection> findByAppAndGroupName(@Param("app") String app,@Param("group") String group);
+
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = "update qr_code set device_count=:count where id>0 and group_id=:grId")

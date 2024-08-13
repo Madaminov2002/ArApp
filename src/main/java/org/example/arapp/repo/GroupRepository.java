@@ -1,6 +1,8 @@
 package org.example.arapp.repo;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.example.arapp.domain.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,4 +26,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Transactional
     @Query(nativeQuery = true,value = "update groups set active=true where name=:grName and app_id=:appId")
     void updateStatusToTrue(@Param("grName") String grName, @Param("appId") Long appId);
+
+    Optional<Group> findByNameAndApp_Name(String groupName, String appName);
 }
