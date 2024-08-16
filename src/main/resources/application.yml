@@ -2,9 +2,9 @@ spring:
   application:
     name: ArApp
   datasource:
-    url: jdbc:postgresql://localhost:5432/ar_app
+    url: jdbc:postgresql://localhost:5432/test
     username: postgres
-    password: Jayxunbey2003
+    password: 123
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
